@@ -161,12 +161,6 @@
                                 <input type="file" name="image" id="image" class="form-control">
                             </div>
                             <hr>
-                            {{-- <div class="form-group">
-                                <label for="description">Image</label>
-                                <input type="file" name="image" id="image" class="form-control">
-                            </div>
-                            <span style="color: red" class="error" id="image_err"></span> --}}
-                            <br>
                             {{-- end  image  --}}
                         </div>
                     </form>
@@ -521,4 +515,4 @@
             });
         });
     </script>
-@en
+@endsection
