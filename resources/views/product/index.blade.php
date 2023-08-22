@@ -18,6 +18,14 @@
 @endsection
 
 @section('content')
+    <div id="progres" style="display: none">
+        <div class="progress progress-bar" role="progressbar" aria-label="Basic example" aria-valuenow="25"
+            aria-valuemin="0" aria-valuemax="100">
+            {{-- <div class="progress-bar" style="width: 25%"></div> --}}
+        </div>
+    </div>
+
+    <br>
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_product_Modal">
         create
     </button>
@@ -36,6 +44,7 @@
                     placeholder="sname , price or description  to search">
             </div>
         </div>
+
         <div class="card-body table-responsive p-0 table-data">
             <table id="tableID" class="table table-hover text-nowrap">
                 <thead>
@@ -131,7 +140,8 @@
                             <hr>
                             {{-- start status  --}}
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="status" id="status" value="active">
+                                <input class="form-check-input" type="radio" name="status" id="status"
+                                    value="active">
                                 <label class="form-check-label">
                                     Active
                                 </label>
@@ -160,7 +170,7 @@
                                 <label for="description">Image</label>
                                 <input type="file" name="image" id="image" class="form-control">
                             </div>
-                            <hr>
+                            <hr> <br>
                             {{-- end  image  --}}
                         </div>
                     </form>
@@ -275,7 +285,7 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
-
+    {{-- Add new Poridyc  --}}
     <script>
         $(document).ready(function() {
             // Set CSRF token for all AJAX requests
@@ -308,6 +318,8 @@
                     data: formData,
                     beforeSend: function() {
                         $(document).find('.error').text('');
+                        $('#progres').css('display', 'block')
+                                                    
                     },
                     processData: false,
                     contentType: false,
@@ -322,13 +334,17 @@
 
                         }
                     },
+
                     error: function(xhr, status, errors) {
                         // let error = errors.responseJSON;
                         if (xhr.status === 422) {
                             var errors = xhr.responseJSON.errors;
+
                             $.each(errors, function(field, messages) {
+                                
                                 // Display validation error messages next to the input fields
                                 $('#' + field + '_err').html(messages.join('<br>'));
+                                toastr.error(messages);
                                 // price_err
                                 // console.log(field);
                             });

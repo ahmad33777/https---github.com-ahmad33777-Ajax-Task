@@ -24,6 +24,13 @@
                         </p>
                     </a>
                 </li>
+                <li class="nav-item ">
+                    <a href="{{ route('posts.index') }}" class="nav-link active">
+                        <p>
+                            Posts
+                        </p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

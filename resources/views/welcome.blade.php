@@ -104,34 +104,3 @@
 
 </html>
 
-{{-- 
-
-<script>
-    $(document).ready(function() {
-        $(document).on('click', '#editBtn', function() {
-            var trainer_id = $(this).val();
-            // alert(schedule_id);
-            $('#editModel').modal('show');
-
-            $.ajax({
-                type: 'GET',
-                url: '/admin/trainers/' + trainer_id + '/edit',
-                success: function(response) {
-                    console.log(response);
-                    $('#editname').val(response.trainer.name);
-                    $('#editphone').val(response.trainer.phone);
-                    $('#editage').val(response.trainer.age);
-                    $('#editemail').val(response.trainer.email);
-                    $('#edit_marital_status').val(response.trainer.marital_status);
-                    console.log(response.trainer.schedules);
-                    var result = response.trainer.schedules.find(item => item.name);
-
-                    $('#editschedule').val(result.name);
-                    $('#trainerID').val(response.trainer.id);
-
-
-                }
-            });
-        });
-    });
-</script> --}}

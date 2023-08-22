@@ -41,6 +41,7 @@
                 <thead>
                     <tr>
                         <th>Name</th>
+                        <th>Parent category </th>
                         <th>Description</th>
                         <th>status</th>
                         <th>image</th>
@@ -51,6 +52,7 @@
                     @foreach ($categoreis as $category)
                         <tr>
                             <td>{{ $category->name }}</td>
+                            <td>{{ $category->parent->name }}</td>
                             <td>{{ $category->description }}</td>
                             <td>
                                 @if ($category->status == 'active')
@@ -253,12 +255,17 @@
                         }
                     },
                     // show errors
-                    error: function(err) {
-                        let error = err.responseJSON;
-                        $.each(error.errors, function(index, value) {
-                            // console.log(index);
-                            $('#' + index + '_err').text(value);
-                        })
+                    error: function(error) {
+                        if (error.responseJSON && error.responseJSON.errors) {
+                            var errors = error.responseJSON.errors;
+                            for (var key in errors) {
+                                if (errors.hasOwnProperty(key)) {
+                                    toastr.error(errors[key][0]);
+                                }
+                            }
+                        } else {
+                            toastr.error('An error occurred. Please try again.');
+                        }
                     }
 
                 });
@@ -320,8 +327,8 @@
                 formData.append('id', id);
                 formData.append('name', name);
                 formData.append('description', description);
-                 formData.append('status', status);
-                 formData.append('image', image);
+                formData.append('status', status);
+                formData.append('image', image);
 
                 $.ajax({
                     type: 'POST',
@@ -344,21 +351,16 @@
 
                         }
                     },
-                    error: function(xhr, status, errors) {
-                        let error = errors.responseJSON;
-                        if (xhr.status === 422) {
-                            var errors = xhr.responseJSON.errors;
-                            $.each(errors, function(field, messages) {
-                                // Display validation error messages next to the input fields
-                                $('#' + 'up_' + field + '_err').html(messages.join(
-                                    '<br>'));
-                                // price_err
-                                // console.log(field);
-                            });
+                    error: function(error) {
+                        if (error.responseJSON && error.responseJSON.errors) {
+                            var errors = error.responseJSON.errors;
+                            for (var key in errors) {
+                                if (errors.hasOwnProperty(key)) {
+                                    toastr.error(errors[key][0]);
+                                }
+                            }
                         } else {
-                            // Handle other types of errors, e.g., display a generic error message
-                            toastr.error('The operation failed ');
-
+                            toastr.error('An error occurred. Please try again.');
                         }
                     }
                 });
