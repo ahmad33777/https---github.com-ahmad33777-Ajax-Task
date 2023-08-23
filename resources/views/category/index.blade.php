@@ -254,19 +254,49 @@
 
                         }
                     },
-                    // show errors
-                    error: function(error) {
-                        if (error.responseJSON && error.responseJSON.errors) {
-                            var errors = error.responseJSON.errors;
-                            for (var key in errors) {
-                                if (errors.hasOwnProperty(key)) {
-                                    toastr.error(errors[key][0]);
-                                }
-                            }
+                    error: function(xhr, status, errors) {
+                        // let error = errors.responseJSON;
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.errors;
+                            var errorMessagesHtml = '<ul>';
+                            $.each(errors, function(field, messages) {
+                                // Display validation error messages next to the input fields
+                                $('#' + field + '_err').html(messages.join('<br>'));
+                                errorMessagesHtml += '<li>' + messages + '</li>';
+                            });
+                            errorMessagesHtml += '</ul>';
+                            toastr.options = {
+                                closeButton: false,
+                                progressBar: true,
+                                showMethod: 'slideDown',
+                                timeOut: 3000,
+
+                            };
+                            toastr.error(errorMessagesHtml);
                         } else {
-                            toastr.error('An error occurred. Please try again.');
+                            // Handle other types of errors, e.g., display a generic error message
+                            toastr.error('The operation failed ');
+
                         }
                     }
+                    // show errors
+                    // error: function(error) {
+                    //     if (error.responseJSON && error.responseJSON.errors) {
+                    //         var errors = error.responseJSON.errors;
+                    //         var errorMessagesHtml = '<ul>';
+                    //         for (var key in errors) {
+                    //             if (errors.hasOwnProperty(key)) {
+                    //                 $('#' + field + '_err').text(errors[key][0])
+                    //                 errorMessagesHtml += '<li>' + errors[key][0] + '</li>';
+                    //             }
+                    //         }
+                    //         errorMessagesHtml += '</ul>';
+                    //         toastr.error(errorMessagesHtml);
+
+                    //     } else {
+                    //         toastr.error('An error occurred. Please try again.');
+                    //     }
+                    // }
 
                 });
             });

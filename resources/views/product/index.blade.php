@@ -135,6 +135,7 @@
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->id }}">{{ $category->name ?? null }}</option>
                                 @endforeach
+
                             </select>
                             <span style="color: red" id="category_id_err" class="error"></span>
                             <hr>
@@ -170,8 +171,10 @@
                                 <label for="description">Image</label>
                                 <input type="file" name="image" id="image" class="form-control">
                             </div>
-                            <hr> <br>
+                            <hr>
                             {{-- end  image  --}}
+                            <p id="selected_image ">selected image </p>
+                            <img id="image-preview" src="" width="50px">
                         </div>
                     </form>
                 </div>
@@ -267,6 +270,9 @@
                             <span style="color: red" class="error" id="up_image_err"></span>
                             <br>
                             {{-- end  image  --}}
+                            {{-- end  image  --}}
+                            <p id="selected_image ">selected image </p>
+                            <img id="image-preview" src="" width="50px">
                         </div>
                     </form>
                 </div>
@@ -283,7 +289,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
         integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        // استدعاء الصفحة
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        // ربط حدث تغيير الصورة
+        $('#image').on('change', function(e) {
+            var imageFile = e.target.files[0];
+            var reader = new FileReader();
 
+            reader.onload = function(e) {
+                $('#image-preview').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(imageFile);
+        });
+    </script>
 
     {{-- Add new Poridyc  --}}
     <script>
@@ -319,7 +343,7 @@
                     beforeSend: function() {
                         $(document).find('.error').text('');
                         $('#progres').css('display', 'block')
-                                                    
+
                     },
                     processData: false,
                     contentType: false,
@@ -339,15 +363,21 @@
                         // let error = errors.responseJSON;
                         if (xhr.status === 422) {
                             var errors = xhr.responseJSON.errors;
-
+                            var errorMessagesHtml = '<ul>';
                             $.each(errors, function(field, messages) {
-                                
                                 // Display validation error messages next to the input fields
                                 $('#' + field + '_err').html(messages.join('<br>'));
-                                toastr.error(messages);
-                                // price_err
-                                // console.log(field);
+                                errorMessagesHtml += '<li>' + messages + '</li>';
                             });
+                            errorMessagesHtml += '</ul>';
+                             toastr.options = {
+                                closeButton: false,
+                                progressBar: true,
+                                showMethod: 'slideDown',
+                                timeOut: 3000,
+                                 
+                            };
+                            toastr.error(errorMessagesHtml);
                         } else {
                             // Handle other types of errors, e.g., display a generic error message
                             toastr.error('The operation failed ');

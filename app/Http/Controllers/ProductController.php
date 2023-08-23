@@ -7,6 +7,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -22,6 +23,14 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        // $validator = Validator::make($request->all(), [
+        //     'name' => ['required', 'string', 'min:3', 'max:255'],
+        //     'description' => ['required', 'string', 'min:5'],
+        //     'category_id' => ['required', 'exists:categories,id'],
+        //     'status' => ['required', 'string', 'in:active,archived'],
+        //     'price' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/'],
+        //     'image' => 'nullable|image',
+        // ]);
 
         $request->validate([
             'name' => ['required', 'string', 'min:3', 'max:255'],
@@ -29,7 +38,7 @@ class ProductController extends Controller
             'category_id' => ['required', 'exists:categories,id'],
             'status' => ['required', 'string', 'in:active,archived'],
             'price' => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/'],
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image',
         ]);
 
         $product = new Product();
@@ -133,10 +142,10 @@ class ProductController extends Controller
         $products = Product::where('name', 'LIKE', '%' . $search . '%')
             ->orWhere('price', 'like', '%' . $search . '%')->get();
 
-        if($products->count() >=1){
+        if ($products->count() >= 1) {
 
-        }else{
-            
+        } else {
+
         }
     }
 }

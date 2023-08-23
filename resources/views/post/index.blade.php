@@ -41,6 +41,7 @@
                     <tr>
                         <th>Post Titel</th>
                         <th>Content</th>
+                        <th># Comments</th>
                         <th>Created at</th>
                         <th>Actions</th>
                     </tr>
@@ -50,6 +51,11 @@
                         <tr>
                             <td>{{ $post->title }}</td>
                             <td>{{ $post->content }}</td>
+                            <td>
+                                <span class="badge badge-primary">
+                                    {{ $post->comments_count }}  comments
+                                </span>
+                            </td>
                             <td>{{ $post->created_at }}</td>
                             <td>
                                 <button type="button" id="editBtn" value="" class="btn btn-sm btn-primary">
@@ -226,7 +232,5 @@
 
 
     {{-- show edit form --}}
-    <script>
-
-    </script>
+    <script></script>
 @endsection
